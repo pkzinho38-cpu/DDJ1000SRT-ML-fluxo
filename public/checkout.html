@@ -237,23 +237,25 @@ input.invalid { border-color: #ff4d4d; }
 /* Responsivo para mobile */
 @media (max-width: 768px) {
   .produto-resumo {
-    display: block; /* Empilha imagem e texto */
-    position: relative;
+    display: flex;
+    flex-direction: column; /* empilha verticalmente */
+    align-items: center;
+    position: static; /* remove absolute */
   }
 
   .imagem-produto {
     width: 100%;
     height: auto;
+    margin-bottom: 15px; /* espaço entre imagem e resumo */
   }
 
   .info-produto {
-    position: absolute;
-    top: 10px;
-    left: 10px;
-    color: #fff;
-    background: rgba(0,0,0,0.5);
-    padding: 10px;
-    border-radius: 8px;
+    position: static; /* remove absolute */
+    width: 100%;
+    color: var(--text-main); /* texto escuro, legível */
+    background: none; /* remove overlay */
+    padding: 0; /* remove padding extra */
+    border-radius: 0; /* remove borda arredondada extra */
   }
 }
 
